@@ -1,0 +1,39 @@
+let s = document.createElement('script');
+s.text = `
+  console.log('Injected MireaJacked v1.0.2 made by with the hope of not writing JavaScript ever again');
+
+  // Intercept and handle Ctrl+C (copy) command directly
+  document.addEventListener('keydown', function(event) {
+    if (event.ctrlKey && event.keyCode === 67) { // Ctrl+C
+      navigator.clipboard.writeText(window.getSelection().toString()).then(function() {
+        console.log('Copying to clipboard was successful!');
+      }, function(err) {
+        console.error('Could not copy text: ', err);
+      });
+      event.preventDefault(); // Prevent other handlers from executing
+      event.stopPropagation(); // Stop the event from bubbling up
+    }
+  }, true); // Use capture to ensure this runs before other listeners
+
+  // Override security settings preventing copying, pasting, etc.
+  M.mod_quiz.secure_window = {
+    init: function(Y) {
+      console.log('Secure window functions have been completely overridden.');
+      Y.delegate = function(type, fn, el, filter) { /* ignore all events */ };
+      Y.on = function(type, fn, el, key) { /* ignore all events */ };
+    },
+    prevent_selection: function(e) { return false; },
+    prevent: function(e) { return false; },
+    prevent_mouse: function(e) { return false; },
+    is_content_editable: function(n) { return true; },
+    close: function(url, delay) { /* do nothing */ },
+    init_close_button: function(Y, url) { /* do nothing */ }
+  };
+
+  // Replace the global alert function to block alerts
+  window.alert = function() { console.log('Blocked an alert attempt.'); };
+
+  // Replace the M object on the window with our overridden settings
+  window.M = M;
+`;
+document.documentElement.appendChild(s);
