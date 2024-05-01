@@ -2,14 +2,23 @@ let s = document.createElement('script');
 s.text = `
   console.log('Injected MireaJacked v1.0.2 made by with the hope of not writing JavaScript ever again');
 
-  // Intercept and handle Ctrl+C (copy) command directly
+  // Intercept and handle keydown events for Ctrl+C, and Ctrl+V
   document.addEventListener('keydown', function(event) {
-    if (event.ctrlKey && event.keyCode === 67) { // Ctrl+C
-      navigator.clipboard.writeText(window.getSelection().toString()).then(function() {
-        console.log('Copying to clipboard was successful!');
-      }, function(err) {
-        console.error('Could not copy text: ', err);
-      });
+    if (event.ctrlKey && (event.keyCode === 67 || event.keyCode === 86)) { // Ctrl+C or Ctrl+V
+      if (event.keyCode === 67) { // Ctrl+C
+        navigator.clipboard.writeText(window.getSelection().toString()).then(function() {
+          console.log('Copying to clipboard was successful!');
+        }, function(err) {
+          console.error('Could not copy text: ', err);
+        });
+      } else if (event.keyCode === 86) { // Ctrl+V
+        navigator.clipboard.readText().then(text => {
+          document.activeElement.value += text; // Assumes the active element can accept text input
+          console.log('Pasting from clipboard was successful!');
+        }).catch(err => {
+          console.error('Failed to read clipboard contents: ', err);
+        });
+      }
       event.preventDefault(); // Prevent other handlers from executing
       event.stopPropagation(); // Stop the event from bubbling up
     }
