@@ -39,6 +39,11 @@ s.text = `
     init_close_button: function(Y, url) { /* do nothing */ }
   };
 
+  // Allow context menu
+  document.addEventListener('contextmenu', function(event) {
+    event.stopPropagation(); // Stop the event from bubbling up
+  }, true); // Use capture to ensure this runs before other listeners
+
   // Replace the global alert function to block alerts
   window.alert = function() { console.log('Blocked an alert attempt.'); };
 
