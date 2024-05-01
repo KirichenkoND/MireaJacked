@@ -6,6 +6,10 @@
 	"icons": {
 		"96": "icon96.png"
 	},
+	"permissions": [
+		"activeTab",
+		"storage"
+	],
 	"content_scripts": [
 		{
 			"matches": [
