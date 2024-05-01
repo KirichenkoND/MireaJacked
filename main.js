@@ -39,6 +39,27 @@ s.text = `
     init_close_button: function(Y, url) { /* do nothing */ }
   };
 
+  // Intercept and handle copy and paste events for context menu
+document.addEventListener('copy', function(event) {
+  event.preventDefault(); // Prevent default copy behavior
+  navigator.clipboard.writeText(window.getSelection().toString()).then(function() {
+    console.log('Copying to clipboard was successful!');
+  }, function(err) {
+    console.error('Could not copy text: ', err);
+  });
+});
+
+document.addEventListener('paste', function(event) {
+  event.preventDefault(); // Prevent default paste behavior
+  navigator.clipboard.readText().then(text => {
+    document.activeElement.value += text; // Assumes the active element can accept text input
+    console.log('Pasting from clipboard was successful!');
+  }).catch(err => {
+    console.error('Failed to read clipboard contents: ', err);
+  });
+});
+
+
   // Allow context menu
   document.addEventListener('contextmenu', function(event) {
     event.stopPropagation(); // Stop the event from bubbling up
