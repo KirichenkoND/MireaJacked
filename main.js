@@ -1,8 +1,27 @@
 let s = document.createElement('script');
 s.text = `
-  console.log('Injected MireaJacked v1.0.2 made by with the hope of not writing JavaScript ever again');
+  console.log('Injected MireaJacked');
 
-  // Intercept and handle keydown events for Ctrl+C, and Ctrl+V
+  // Находим элемент по его ID
+  const quizTimer = document.getElementById('quiz-timer');
+
+  // Изменяем цвет фона элемента
+  if (quizTimer) {
+    quizTimer.style.backgroundColor = '#f0f0f0'; // светло-серый цвет
+  }
+
+  // Переопределите функцию window.open, чтобы открывать все в новых вкладках, но правильно
+  const originalOpen = window.open; // Сохраняем оригинальную функцию
+  window.open = function(url, windowName, windowFeatures) {
+    // Если URL не задан или это 'about:blank', используем оригинальную функцию
+    if (!url || url === 'about:blank') {
+      return originalOpen.apply(this, arguments);
+    }
+    // Иначе открываем URL в новой вкладке
+    return originalOpen(url, '_blank');
+  };
+
+  // Перехватывать и обрабатывать события нажатия клавиш для Ctrl+C и Ctrl+V
   document.addEventListener('keydown', function(event) {
     if (event.ctrlKey && (event.keyCode === 67 || event.keyCode === 86)) { // Ctrl+C or Ctrl+V
       if (event.keyCode === 67) { // Ctrl+C
